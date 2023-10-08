@@ -1,0 +1,85 @@
+graph LR
+
+  subgraph User's Frontend
+    A[Frontend]
+    B[Azure App Service]
+    C[Azure Blob Storage]
+  end
+
+  subgraph Reminder Microservice
+    D[Reminder Microservice]
+    E[Azure Kubernetes Service - AKS]
+    F[Azure Functions]
+  end
+
+  subgraph Birthday Microservice
+    G[Birthday Microservice]
+    H[Azure Kubernetes Service - AKS]
+  end
+
+  subgraph Absence Microservice
+    I[Absence Microservice]
+    J[Azure Kubernetes Service - AKS]
+  end
+
+  subgraph Message Broker
+    K[Azure Service Bus]
+    L[Azure Event Hubs]
+  end
+
+  subgraph Worker
+    M[Worker]
+    N[Azure VM Scale Sets]
+  end
+
+  subgraph Database
+    O[Azure SQL Database]
+    P[Azure Cosmos DB]
+  end
+
+  subgraph Notification Microservice
+    Q[Notification Microservice]
+  end
+
+  subgraph Google Web Push Server
+    R[Google Web Push Server]
+  end
+
+  A --> B
+  A --> C
+  D --> E
+  D --> F
+  D --> K
+  D --> L
+  G --> H
+  G --> K
+  G --> L
+  I --> J
+  I --> K
+  I --> L
+  M --> N
+  M --> O
+  M --> P
+  D --> Q
+  G --> Q
+  I --> Q
+  Q --> R
+
+  style A fill:#86c7f3
+  style B fill:#86c7f3
+  style C fill:#86c7f3
+  style D fill:#86c7f3
+  style E fill:#86c7f3
+  style F fill:#86c7f3
+  style G fill:#86c7f3
+  style H fill:#86c7f3
+  style I fill:#86c7f3
+  style J fill:#86c7f3
+  style K fill:#86c7f3
+  style L fill:#86c7f3
+  style M fill:#86c7f3
+  style N fill:#86c7f3
+  style O fill:#86c7f3
+  style P fill:#86c7f3
+  style Q fill:#86c7f3
+  style R fill:#86c7f3

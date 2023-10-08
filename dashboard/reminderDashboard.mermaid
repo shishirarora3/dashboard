@@ -1,0 +1,83 @@
+classDiagram
+  %% Existing Entities and Value Objects
+  class EmployeeEvent {
+    +eventId: Guid
+    +eventName: String
+    +eventDate: Date
+    +employeeId: Guid
+  }
+  
+  class EmployeeId {
+    +id: Guid
+  }
+  
+  %% Existing Aggregates and Services
+  class Dashboard {
+    +getEmployeeEvents(userId: Guid): List<EmployeeEvent>
+  }
+  
+  class EmployeeEventService {
+    +generateEmployeeEvents(): List<EmployeeEvent>
+    +getTeamMembersAndSupervisorHierarchy(userId: Guid): List<EmployeeId>
+    +customSortByEventDate(events: List<EmployeeEvent>): List<EmployeeEvent>
+  }
+
+  %% New Entities and Value Objects
+  class AbsenceRequest {
+    +absenceRequestId: Guid
+    +employeeId: Guid
+    +startDate: Date
+    +endDate: Date
+    +status: String
+    +comment: String
+  }
+
+  class AbsenceApproval {
+    +absenceApprovalId: Guid
+    +supervisorId: Guid
+    +absenceRequestId: Guid
+    +status: String
+    +comment: String
+  }
+
+  %% New Aggregates and Services
+  class Dashboard  {
+    +getEmployeeEvents(userId: Guid): List<EmployeeEvent>
+    +requestAbsence(employeeId: Guid, startDate: Date, endDate: Date, comment: String): AbsenceRequest
+    +deleteAbsence(absenceRequestId: Guid): void
+    +approveAbsence(absenceRequestId: Guid, supervisorId: Guid, comment: String): AbsenceApproval
+    +declineAbsence(absenceRequestId: Guid, supervisorId: Guid, comment: String): AbsenceApproval
+  }
+
+  class AbsenceService {
+    +requestAbsence(employeeId: Guid, startDate: Date, endDate: Date, comment: String): AbsenceRequest
+    +deleteAbsence(absenceRequestId: Guid): void
+    +approveAbsence(absenceRequestId: Guid, supervisorId: Guid, comment: String): AbsenceApproval
+    +declineAbsence(absenceRequestId: Guid, supervisorId: Guid, comment: String): AbsenceApproval
+    +sendAbsenceNotifications(requesterId: Guid, supervisorId: Guid, absenceRequestId: Guid, action: String): void
+  }
+
+  %% New Domain Events
+  class AbsenceRequestedEvent {
+    +absenceRequestId: Guid
+    +employeeId: Guid
+    +startDate: Date
+    +endDate: Date
+  }
+
+  class AbsenceDeletedEvent {
+    +absenceRequestId: Guid
+    +employeeId: Guid
+    +startDate: Date
+    +endDate: Date
+  }
+
+  class AbsenceApprovedEvent {
+    +absenceRequestId: Guid
+    +supervisorId: Guid
+  }
+
+  class AbsenceDeclinedEvent {
+    +absenceRequestId: Guid
+    +supervisorId: Guid
+  }
