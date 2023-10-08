@@ -1,0 +1,121 @@
+classDiagram
+  %% Dashboard Aggregate
+  class Dashboard {
+    +getEmployeeEvents(userId: Guid): List<EmployeeEvent>
+    +createReminder(userId: Guid, text: String, date: Date, time: Time): Reminder
+    +editReminder(reminderId: Guid, text: String, date: Date, time: Time): Reminder
+    +deleteReminder(reminderId: Guid): void
+    +getReminders(userId: Guid): List<Reminder>
+    +markReminderAsDone(reminderId: Guid): Reminder
+    +requestAbsence(employeeId: Guid, startDate: Date, endDate: Date, comment: String): AbsenceRequest
+    +deleteAbsence(absenceRequestId: Guid): void
+    +approveAbsence(absenceRequestId: Guid, supervisorId: Guid, comment: String): AbsenceApproval
+    +declineAbsence(absenceRequestId: Guid, supervisorId: Guid, comment: String): AbsenceApproval
+    +sendAbsenceNotifications(userId: Guid, absenceRequestId: Guid, action: String): void
+  }
+
+  %% Employee Entity
+  class Employee {
+    +employeeId: Guid
+    +name: String
+    +birthdate: Date
+    +workAnniversary: Date
+  }
+
+  %% Reminder Entity
+  class Reminder {
+    +reminderId: Guid
+    +userId: Guid
+    +text: String
+    +date: Date
+    +time: Time
+    +status: ReminderStatus
+  }
+
+  %% ReminderStatus Value Object
+  class ReminderStatus {
+    +status: String
+  }
+
+  %% AbsenceRequest Entity
+  class AbsenceRequest {
+    +absenceRequestId: Guid
+    +employeeId: Guid
+    +startDate: Date
+    +endDate: Date
+    +status: String
+    +comment: String
+  }
+
+  %% AbsenceApproval Entity
+  class AbsenceApproval {
+    +absenceApprovalId: Guid
+    +supervisorId: Guid
+    +absenceRequestId: Guid
+    +status: String
+    +comment: String
+  }
+
+  %% Domain Events
+  class AbsenceRequestedEvent {
+    +absenceRequestId: Guid
+    +employeeId: Guid
+    +startDate: Date
+    +endDate: Date
+  }
+
+  class AbsenceDeletedEvent {
+    +absenceRequestId: Guid
+    +employeeId: Guid
+    +startDate: Date
+    +endDate: Date
+  }
+
+  class AbsenceApprovedEvent {
+    +absenceRequestId: Guid
+    +supervisorId: Guid
+  }
+
+  class AbsenceDeclinedEvent {
+    +absenceRequestId: Guid
+    +supervisorId: Guid
+  }
+
+  class ReminderCreatedEvent {
+    +reminderId: Guid
+    +userId: Guid
+    +text: String
+    +date: Date
+  }
+
+  class ReminderEditedEvent {
+    +reminderId: Guid
+    +userId: Guid
+    +text: String
+    +date: Date
+  }
+
+  class ReminderDeletedEvent {
+    +reminderId: Guid
+    +userId: Guid
+  }
+
+  class ReminderMarkedAsDoneEvent {
+    +reminderId: Guid
+    +userId: Guid
+  }
+
+  %% Relationships
+  Dashboard --|> Employee: Manages
+  Dashboard --|> Reminder: Manages
+  Dashboard --|> AbsenceRequest: Manages
+  Dashboard --|> AbsenceApproval: Manages
+
+  Dashboard --|> AbsenceRequestedEvent: Publishes
+  Dashboard --|> AbsenceDeletedEvent: Publishes
+  Dashboard --|> AbsenceApprovedEvent: Publishes
+  Dashboard --|> AbsenceDeclinedEvent: Publishes
+  Dashboard --|> ReminderCreatedEvent: Publishes
+  Dashboard --|> ReminderEditedEvent: Publishes
+  Dashboard --|> ReminderDeletedEvent: Publishes
+  Dashboard --|> ReminderMarkedAsDoneEvent: Publishes
